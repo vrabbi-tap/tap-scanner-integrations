@@ -1,0 +1,10 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: ghcr.io/vrabbi-tap/trivy-scanner-package@sha256:9d10b9970504f555fa86dc1d6bdfc76577ca9f65ba2638766a1561e0a0bfd47a
+  image: ghcr.io/vrabbi-tap/trivy-scanner-package@sha256:9d10b9970504f555fa86dc1d6bdfc76577ca9f65ba2638766a1561e0a0bfd47a
+- annotations:
+    kbld.carvel.dev/id: ghcr.io/vrabbi-tap/trivy-server-package@sha256:19c358a563ce475565ec76d79e16c3d1e7b47392050b2b301eff1e050a1746e7
+  image: ghcr.io/vrabbi-tap/trivy-server-package@sha256:19c358a563ce475565ec76d79e16c3d1e7b47392050b2b301eff1e050a1746e7
+kind: ImagesLock

@@ -1,0 +1,11 @@
+---
+apiVersion: imgpkg.carvel.dev/v1alpha1
+images:
+- annotations:
+    kbld.carvel.dev/id: aquasec/trivy
+    kbld.carvel.dev/origins: |
+      - resolved:
+          tag: latest
+          url: aquasec/trivy
+  image: index.docker.io/aquasec/trivy@sha256:a5544f44ca957135921410f4d3fa340d42b6ab56bbb6bf7406d783df9e84f95f
+kind: ImagesLock

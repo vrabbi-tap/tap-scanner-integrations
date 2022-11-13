@@ -1,0 +1,85 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:data", "data")
+#@ load("@ytt:assert", "assert")
+
+#@ if data.values.metadataStore != None and data.values.metadataStore.url != None and len(data.values.metadataStore.url) > 0:
+
+#! Configure Metadata Store
+
+#@ if data.values.metadataStore.caSecret.name == None or len(data.values.metadataStore.caSecret.name) == 0:
+  #@ assert.fail("metadataStore.caSecret.name required")
+#@ elif data.values.metadataStore.caSecret.importFromNamespace != None and len(data.values.metadataStore.caSecret.importFromNamespace) > 0:
+---
+apiVersion: secretgen.carvel.dev/v1alpha1
+kind: SecretImport
+metadata:
+  name: #@ data.values.metadataStore.caSecret.name
+  namespace: #@ data.values.namespace
+spec:
+  fromNamespace: #@ data.values.metadataStore.caSecret.importFromNamespace
+#@ end
+
+#! authSecret takes precedence (for multi-cluster support), otherwise use cluserRole binding (for single-cluster support)
+#@ if data.values.metadataStore.authSecret.name != None and len(data.values.metadataStore.authSecret.name) > 0:
+
+#@ if data.values.metadataStore.authSecret.importFromNamespace != None and len(data.values.metadataStore.authSecret.importFromNamespace) > 0:
+---
+apiVersion: secretgen.carvel.dev/v1alpha1
+kind: SecretImport
+metadata:
+  name: #@ data.values.metadataStore.authSecret.name
+  namespace: #@ data.values.namespace
+spec:
+  fromNamespace: #@ data.values.metadataStore.authSecret.importFromNamespace
+#@ end
+#! else the user has created a secret in the namespace already
+
+#@ elif data.values.metadataStore.clusterRole != None and len(data.values.metadataStore.clusterRole) > 0:
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: #@ "{}-{}-{}".format(data.values.scanner.serviceAccount, data.values.namespace, data.values.metadataStore.clusterRole)
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: #@ data.values.metadataStore.clusterRole
+subjects:
+- kind: ServiceAccount
+  name: #@ data.values.scanner.serviceAccount
+  namespace: #@ data.values.namespace
+#@ else:
+  #@ assert.fail("either metadataStore.clusterRole or metadataStore.authSecret.name required")
+#@ end
+
+#@overlay/match by=overlay.subset({"kind": "ScanTemplate"}), expects="1+"
+---
+spec:
+  template:
+    volumes:
+    - name: metadata-store-ca-cert
+      secret:
+        secretName: #@ data.values.metadataStore.caSecret.name
+    #@overlay/match when=1
+    initContainers:
+    #@overlay/match by=overlay.map_key("name"), when=1
+    - name: metadata-store-plugin-config
+      #@overlay/match missing_ok=True
+      volumeMounts:
+        - name: metadata-store-ca-cert
+          mountPath: /metadata-store
+          readOnly: true
+      #@overlay/match missing_ok=True
+      env:
+        #@overlay/match by=overlay.subset({"name": "METADATA_STORE_URL"}), missing_ok=True
+        - name: METADATA_STORE_URL
+          value: #@ data.values.metadataStore.url
+        #@ if data.values.metadataStore.authSecret.name != None and len(data.values.metadataStore.authSecret.name) > 0:
+        #@overlay/match by=overlay.subset({"name": "METADATA_STORE_ACCESS_TOKEN"}), missing_ok=True
+        - name: METADATA_STORE_ACCESS_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: #@ data.values.metadataStore.authSecret.name
+              key: auth_token
+        #@ end
+#@ end

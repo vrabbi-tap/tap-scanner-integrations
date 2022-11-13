@@ -1,0 +1,13 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: PackageMetadata
+metadata:
+  name: trivy-server.scanning.tap.vrabbi.cloud
+  namespace: tap-install
+spec:
+  displayName: Trivy Server for Supply Chain Security Tools - Scan
+  longDescription: Aqua Trivy Server for Supply Chain Security Tools - Scan.
+  maintainers:
+  - name: vRabbi (Scott Rosenberg, TeraSky)
+  providerName: TeraSky
+  shortDescription: Aqua Trivy Backend Server
+  supportDescription: https://vrabbi.cloud

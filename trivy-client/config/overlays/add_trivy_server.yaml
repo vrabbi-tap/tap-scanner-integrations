@@ -1,0 +1,17 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:data", "data")
+#@ load("@ytt:assert", "assert")
+
+#@overlay/match by=overlay.subset({"kind": "ScanTemplate"}), expects="1+"
+---
+spec:
+  template:
+    #@overlay/match when=1
+    initContainers:
+    #@overlay/match by=overlay.map_key("name"), when=1
+    - name: scan-plugin
+      #@overlay/match missing_ok=True
+      env:
+        #@overlay/match by=overlay.subset({"name": "TRIVY_SERVER"}), missing_ok=True
+        - name: TRIVY_SERVER
+          value: #@ data.values.trivyServer.url
