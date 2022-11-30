@@ -2,6 +2,9 @@
 apiVersion: imgpkg.carvel.dev/v1alpha1
 images:
 - annotations:
+    kbld.carvel.dev/id: ghcr.io/vrabbi-tap/trivy-scanner-package@sha256:628b4ed09cd72d38db596a8a2582504b516e5695c7ee43940ea305877f4c9950
+  image: ghcr.io/vrabbi-tap/trivy-scanner-package@sha256:628b4ed09cd72d38db596a8a2582504b516e5695c7ee43940ea305877f4c9950
+- annotations:
     kbld.carvel.dev/id: ghcr.io/vrabbi-tap/trivy-scanner-package@sha256:9d10b9970504f555fa86dc1d6bdfc76577ca9f65ba2638766a1561e0a0bfd47a
   image: ghcr.io/vrabbi-tap/trivy-scanner-package@sha256:9d10b9970504f555fa86dc1d6bdfc76577ca9f65ba2638766a1561e0a0bfd47a
 - annotations:

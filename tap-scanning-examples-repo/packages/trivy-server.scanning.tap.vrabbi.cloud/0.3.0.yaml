@@ -1,0 +1,64 @@
+apiVersion: data.packaging.carvel.dev/v1alpha1
+kind: Package
+metadata:
+  name: trivy-server.scanning.tap.vrabbi.cloud.0.3.0
+  namespace: tap-install
+spec:
+  refName: trivy-server.scanning.tap.vrabbi.cloud
+  releaseNotes: Supply Chain Security Tools - Scan (Trivy Scanner Backend) 1.3.0
+  template:
+    spec:
+      deploy:
+      - kapp: {}
+      fetch:
+      - imgpkgBundle:
+          image: ghcr.io/vrabbi-tap/trivy-server-package@sha256:19c358a563ce475565ec76d79e16c3d1e7b47392050b2b301eff1e050a1746e7
+      template:
+      - ytt:
+          paths:
+          - config/
+      - kbld:
+          paths:
+          - '-'
+          - .imgpkg/images.yml
+  valuesSchema:
+    openAPIv3:
+      properties:
+        resources:
+          properties:
+            limits:
+              properties:
+                cpu:
+                  anyOf:
+                  - type: integer
+                  - type: string
+                  default: 1000m
+                  description: Limits describes the maximum amount of cpu resources
+                    allowed.
+                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                  x-kubernetes-int-or-string: true
+              type: object
+            requests:
+              properties:
+                cpu:
+                  anyOf:
+                  - type: integer
+                  - type: string
+                  default: 250m
+                  description: Requests describes the minimum amount of cpu resources
+                    required.
+                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                  x-kubernetes-int-or-string: true
+                memory:
+                  anyOf:
+                  - type: integer
+                  - type: string
+                  default: 128Mi
+                  description: Requests describes the minimum amount of memory resources
+                    required.
+                  pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                  x-kubernetes-int-or-string: true
+              type: object
+          type: object
+      title: trivy-server.scanning.tap.vrabbi.cloud values schema
+  version: 0.3.0
