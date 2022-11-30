@@ -18,7 +18,7 @@ spec:
   packageRef:
     refName: trivy-scanner.scanning.tap.vrabbi.cloud
     versionSelection:
-      constraints: 0.2.0
+      constraints: 0.3.0
       prereleases: {}
   paused: false
   serviceAccountName: tap-install-sa
@@ -35,7 +35,7 @@ spec:
   packageRef:
     refName: trivy-server.scanning.tap.vrabbi.cloud
     versionSelection:
-      constraints: 0.2.0
+      constraints: 0.3.0
       prereleases: {}
   paused: false
   serviceAccountName: tap-install-sa
