@@ -69,6 +69,7 @@ spec:
       - mountPath: /.cache
         name: cache
         readOnly: false
+    #@ if data.values.metadataStore != None and data.values.metadataStore.url != None and len(data.values.metadataStore.url) > 0:
     - args:
       - -c
       - |
@@ -112,6 +113,7 @@ spec:
       - mountPath: /.config
         name: insight-config
         readOnly: false
+    #@ end
     - args:
       - check
       - --policy
