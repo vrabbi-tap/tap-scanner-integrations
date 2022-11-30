@@ -4,6 +4,11 @@ metadata:
   name: public-image-scan-template
 spec:
   template:
+    #@ if data.values.scanner.pullSecret == None:
+    #@ elif len(data.values.scanner.pullSecret) > 0:
+    imagePullSecrets:
+      - name: #@ data.values.scanner.pullSecret
+    #@ end
     containers:
     - args:
       - process
@@ -49,6 +54,7 @@ spec:
       - mountPath: /.cache
         name: cache
         readOnly: false
+    #@ if data.values.metadataStore != None and data.values.metadataStore.url != None and len(data.values.metadataStore.url) > 0:
     - args:
       - -c
       - |
@@ -92,6 +98,7 @@ spec:
       - mountPath: /.config
         name: insight-config
         readOnly: false
+    #@ end
     - args:
       - check
       - --policy
