@@ -2,7 +2,7 @@
 
 ## Install Repository
 ```bash
-tanzu package repository add tap-scanner-integrations --url ghcr.io/vrabbi-tap/tap-scanning-examples-repo:0.1.0 --namespace tap-install --create-namespace
+tanzu package repository add tap-scanner-integrations --url ghcr.io/vrabbi-tap/tap-scanning-examples-repo:0.1.1 --namespace tap-install --create-namespace
 ```  
   
 ## Install Packages
